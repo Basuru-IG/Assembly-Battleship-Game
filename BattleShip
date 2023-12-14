@@ -1,0 +1,1007 @@
+.data
+    ROWS:       .word 7
+    COLS:       .word 7
+
+    one: .word 1
+    player1Board:   .space 196   
+    player2Board:   .space 196    
+
+    player1Hits:    .word 0
+    player1Misses:  .word 0
+    player2Hits:    .word 0
+    player2Misses:  .word 0
+
+    spam:          .asciiz "***************************************************************************************\n"
+    spamplayer1:   .asciiz "***************************************PLAYER 1****************************************\n"
+    spamplayer2:   .asciiz "***************************************PLAYER 2****************************************\n"
+
+    currentPlayer:  .word 1          
+    gameOver:       .word 0          
+    
+    player2Prompt:   .asciiz "Player 2 enter ship locations from rowbow to columnstern: "
+    player1Prompt:   .asciiz "Player 1 enter ship locations from rowbow to columnstern: "
+
+    Type3ShipMsg:   .asciiz "Enter 2x1 ship!\n"
+    Type2ShipMsg:   .asciiz "Enter 3x1 ship!\n"
+    Type1ShipMsg:   .asciiz "Enter 4x1 ship!\n"
+
+    Player1TurnMsg:   .asciiz "Player 1's turn\n"
+    Player2TurnMsg:   .asciiz "Player 2's turn\n"
+
+    ChoseRowMsg:    .asciiz "Enter ATTACK row: "
+    ChoseColMsg:    .asciiz "Enter ATTACK column: "
+    wrongShipMsg:   .asciiz "Invalid ship type. Please renter.\n"
+    invalidCoordMsg:   .asciiz "Invalid coordinates. Please renter.\n"
+    invalidPosMsg:     .asciiz "Invalid position. Please ren.\n"
+    overlapMsg:        .asciiz "Ships cannot overlap. Please renter\n"
+    hitMsg:            .asciiz "HIT!\n"
+    missMsg:           .asciiz "MISS!\n"
+    player1WinMsg:     .asciiz "Game Over! Player 1 wins!\n"
+    player2WinMsg:     .asciiz "Game Over! Player 2 wins!\n"
+    rowship:     .asciiz "Rowship\n"
+    colship: .asciiz "Colship\n"
+    currentBoard:     .asciiz "Current Board:\n"
+    space: .asciiz " "
+    newline: .asciiz "\n"
+.text
+.globl main
+main:
+    addi $s0, $s0, 1    
+    addi $s1, $s1, 0
+    addi $s2, $s2, 0 
+    addi $s3, $s3, 0
+    addi $s4, $s4, 0
+    addi $s5, $s5, 0
+    jal setupShipsPlayer1
+gameLoop:
+    bge $s1, 4, player1Win
+    bge $s2, 4, player2Win
+    beq $s0, 1, player1Turn
+    beq $s0, 2, player2Turn
+player1Turn:
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spamplayer1
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    la $t1, player2Board
+
+    li $v0, 4
+    la $a0, Player1TurnMsg
+    syscall
+
+    li $v0, 4
+    la $a0, ChoseRowMsg
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t2, $v0
+
+    li $v0, 4
+    la $a0, ChoseColMsg
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t3, $v0
+
+    blt $t2, $zero, invalidCoordMsg
+    blt $t3, $zero, invalidCoordMsg
+    bge $t2, 7, invalidCoordMsg
+    bge $t3, 7, invalidCoordMsg
+
+    add $t4, $t4, $zero
+    add $t5, $t5, $zero
+    mul $t5, $t2, 7
+    add $t5, $t5, $t3
+    mul $t5, $t5, 4
+    add $t4, $t5, $zero
+
+    lw $t6, player2Board($t4)
+    beq $t6, $zero, miss
+    
+    li $v0, 4
+    la $a0, hitMsg
+    syscall
+
+    addi $s1, $s1, 1
+    sw $zero, 0($t1)
+
+    addi $s0, $s0, 1
+    j gameLoop
+miss:
+    li $v0, 4
+    la $a0, missMsg
+    syscall
+
+    addi $s1, $s1, 1
+    j gameLoop
+
+player2Turn:
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+   
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spamplayer2
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+   
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    la $t1, player1Board
+
+    li $v0, 4
+    la $a0, Player2TurnMsg
+    syscall
+
+    li $v0, 4
+    la $a0, ChoseRowMsg
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t2, $v0
+
+    li $v0, 4
+    la $a0, ChoseColMsg
+    syscall
+
+    li $v0, 5
+    syscall
+    move $t3, $v0
+
+    blt $t2, $zero, invalidCoordMsg
+    blt $t3, $zero, invalidCoordMsg
+    bge $t2, 7, invalidCoordMsg
+    bge $t3, 7, invalidCoordMsg
+
+    add $t4, $t4, $zero
+    add $t5, $t5, $zero
+    mul $t5, $t2, 7
+    add $t5, $t5, $t3
+    mul $t5, $t5, 4
+    add $t4, $t5, $zero
+
+    lw $t6, player1Board($t4)
+    beq $t6, $zero, miss2
+    
+    li $v0, 4
+    la $a0, hitMsg
+    syscall
+
+    addi $s2, $s2, 1
+    sw $zero, 0($t1)
+
+    subi $s0, $s0, 1
+
+    j gameLoop
+miss2:
+    li $v0, 4
+    la $a0, missMsg
+    syscall
+
+    subi $s0, $s0, 1
+
+    j gameLoop
+
+player1Win:
+    li $v0, 4             
+    la $a0, player1WinMsg
+    syscall
+    
+    j endLoop
+player2Win:
+    li $v0, 4             
+    la $a0, player1WinMsg
+    syscall
+    
+    j endLoop
+endLoop:
+    li $v0, 10          
+    syscall
+setupShipsPlayer2:
+    la $a0, player2Board
+    li $t0, 1                 
+    li $t1, 2
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+    
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spamplayer2
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+    
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+    
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    setup_ships_loop_player2:
+        j type_3_ship_placement2
+
+type_3_ship_placement2:
+    
+    beq $s3, 3, type_2_ship_placement2
+
+    li $v0, 4
+    la $a0, Type3ShipMsg
+    syscall
+
+    li $v0, 4
+    la $a0, player2Prompt
+    syscall
+    
+    li $v0, 5            
+    syscall
+    move $t2, $v0        #rowBow
+    
+    li $v0, 5          
+    syscall
+    move $t3, $v0        #colBow
+
+    li $v0, 5           
+    syscall
+    move $t4, $v0        #rowStern
+
+    li $v0, 5            
+    syscall
+    move $t5, $v0
+
+    sub $t6, $t4, $t2
+    sub $t7, $t5, $t3
+    mul $t8, $t6, $t6
+    mul $t9, $t7, $t7
+    add $t8, $t8, $t9
+    addi $t8, $t8, 1
+
+    bne $t8, 2, wrongShip2
+
+    add $s3, $s3, 1
+
+    jal checker2
+
+    j type_3_ship_placement2
+
+type_2_ship_placement2:
+        
+    beq $s4, 2, type_1_ship_placement2
+
+    li $v0, 4
+    la $a0, Type2ShipMsg
+    syscall
+
+    li $v0, 4
+    la $a0, player2Prompt
+    syscall
+    
+    li $v0, 5            
+    syscall
+    move $t2, $v0        #rowBow
+    
+    li $v0, 5          
+    syscall
+    move $t3, $v0        #colBow
+
+    li $v0, 5           
+    syscall
+    move $t4, $v0        #rowStern
+
+    li $v0, 5            
+    syscall
+    move $t5, $v0
+
+    sub $t6, $t4, $t2
+    sub $t7, $t5, $t3
+    mul $t8, $t6, $t6
+    mul $t9, $t7, $t7
+    add $t8, $t8, $t9
+    addi $t8, $t8, 1
+
+    bne $t8, 5, wrongShip2
+
+    addi $s4, $s4, 1
+
+    jal checker2
+
+    j type_2_ship_placement2
+
+type_1_ship_placement2:
+
+    beq $s5, 1, end_setup_ships_loop_player2
+
+    li $v0, 4
+    la $a0, Type1ShipMsg
+    syscall
+
+    li $v0, 4
+    la $a0, player2Prompt
+    syscall
+    
+    li $v0, 5            
+    syscall
+    move $t2, $v0        #rowBow
+    
+    li $v0, 5          
+    syscall
+    move $t3, $v0        #colBow
+
+    li $v0, 5           
+    syscall
+    move $t4, $v0        #rowStern
+
+    li $v0, 5            
+    syscall
+    move $t5, $v0
+
+    sub $t6, $t4, $t2
+    sub $t7, $t5, $t3
+    mul $t8, $t6, $t6
+    mul $t9, $t7, $t7
+    add $t8, $t8, $t9
+    addi $t8, $t8, 1
+
+    bne $t8, 10, wrongShip2
+
+    addi $s5, $s5, 1
+
+    jal checker2
+
+    j type_1_ship_placement2
+
+checker2:
+	blt $t2, $zero, invalid_coord2      
+    	blt $t3, $zero, invalid_coord2      
+    	blt $t4, $zero, invalid_coord2      
+    	blt $t5, $zero, invalid_coord2   
+    	   
+    	bge $t2, 7, overlap_coord2      
+    	bge $t3, 7, overlap_coord2     
+    	bge $t4, 7, overlap_coord2       
+    	bge $t5, 7, overlap_coord2 
+    		
+    	beq $t2, $t4, isRow2
+    	beq $t3, $t5, isCol2
+    	
+    	j invalid_coord2
+ 
+    isRow2:
+    	li $v0, 4
+    	la $a0, rowship
+    	syscall
+    	
+    	add $t7, $t7, $zero
+    	add $t8, $t8, $zero
+    	mul $t8, $t2, 7        
+    	add $t8, $t8, $t3      
+    	mul $t8, $t8, 4       
+	add $t7, $t8, $zero
+	
+	addi $t5, $t5, 1
+	
+	jal row_ship_placement_loop2
+	
+	j end_each_player2_placement
+    isCol2:
+    	li $v0, 4
+    	la $a0, colship
+    	syscall
+    	
+    	add $t7, $t7, $zero
+    	add $t8, $t8, $zero
+    	mul $t8, $t2, 7      
+    	add $t8, $t8, $t3     
+    	mul $t8, $t8, 4       
+	add $t7, $t8, $zero
+	
+	addi $t4, $t4, 1
+	
+	jal col_ship_placement_loop2
+	
+	j end_each_player2_placement
+setupShipsPlayer1:
+    la $a0, player1Board
+    li $t0, 1                 
+    li $t1, 2
+    
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+    
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+    
+    li $v0, 4
+    la $a0, spam
+    syscall    
+    
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    li $v0, 4
+    la $a0, spam
+    syscall
+    
+    li $v0, 4
+    la $a0, spam
+    syscall
+
+    setup_ships_loop_player1:
+        j type_3_ship_placement1
+type_3_ship_placement1:
+
+    beq $s3, 3, type_2_ship_placement1
+
+    li $v0, 4
+    la $a0, Type3ShipMsg
+    syscall
+
+    li $v0, 4
+    la $a0, player1Prompt
+    syscall
+    
+    li $v0, 5            
+    syscall
+    move $t2, $v0        #rowBow
+    
+    li $v0, 5          
+    syscall
+    move $t3, $v0        #colBow
+
+    li $v0, 5           
+    syscall
+    move $t4, $v0        #rowStern
+
+    li $v0, 5            
+    syscall
+    move $t5, $v0
+
+    sub $t6, $t4, $t2
+    sub $t7, $t5, $t3
+    mul $t8, $t6, $t6
+    mul $t9, $t7, $t7
+    add $t8, $t8, $t9
+    addi $t8, $t8, 1
+    bne $t8, 2, wrongShip1
+
+    addi $s3, $s3, 1
+
+    jal checker1
+ 
+    j type_3_ship_placement1
+
+type_2_ship_placement1:
+    
+    beq $s4, 2, type_1_ship_placement1
+
+    li $v0, 4
+    la $a0, Type2ShipMsg
+    syscall
+
+    li $v0, 4
+    la $a0, player1Prompt
+    syscall
+    
+    li $v0, 5            
+    syscall
+    move $t2, $v0        #rowBow
+    
+    li $v0, 5          
+    syscall
+    move $t3, $v0        #colBow
+
+    li $v0, 5           
+    syscall
+    move $t4, $v0        #rowStern
+
+    li $v0, 5            
+    syscall
+    move $t5, $v0
+
+    sub $t6, $t4, $t2
+    sub $t7, $t5, $t3
+    mul $t8, $t6, $t6
+    mul $t9, $t7, $t7
+    add $t8, $t8, $t9
+    addi $t8, $t8, 1
+
+    bne $t8, 5, wrongShip1
+
+    addi $s4, $s4, 1 
+
+    jal checker1
+
+    j type_2_ship_placement1
+
+type_1_ship_placement1:
+        
+    beq $s5, 1, end_setup_ships_loop_player1
+
+    li $v0, 4
+    la $a0, Type1ShipMsg
+    syscall
+
+    li $v0, 4
+    la $a0, player1Prompt
+    syscall
+    
+    li $v0, 5            
+    syscall
+    move $t2, $v0        #rowBow
+    
+    li $v0, 5          
+    syscall
+    move $t3, $v0        #colBow
+
+    li $v0, 5           
+    syscall
+    move $t4, $v0        #rowStern
+
+    li $v0, 5            
+    syscall
+    move $t5, $v0
+
+    sub $t6, $t4, $t2
+    sub $t7, $t5, $t3
+    mul $t8, $t6, $t6
+    mul $t9, $t7, $t7
+    add $t8, $t8, $t9
+    addi $t8, $t8, 1
+
+    bne $t8, 10, wrongShip1
+
+    addi $s5, $s5, 1
+    
+    jal checker1
+
+    j type_1_ship_placement1
+
+checker1:
+	blt $t2, $zero, invalid_coord      
+    	blt $t3, $zero, invalid_coord      
+    	blt $t4, $zero, invalid_coord      
+    	blt $t5, $zero, invalid_coord   
+    	   
+    	bge $t2, 7, overlap_coord      
+    	bge $t3, 7, overlap_coord     
+    	bge $t4, 7, overlap_coord       
+    	bge $t5, 7, overlap_coord 
+    		
+    	beq $t2, $t4, isRow1
+    	beq $t3, $t5, isCol1
+    	
+    	j invalid_coord
+    	  
+    isRow1:
+    	li $v0, 4
+    	la $a0, rowship
+    	syscall
+    	
+    	add $t7, $t7, $zero
+    	add $t8, $t8, $zero
+    	mul $t8, $t2, 7        
+    	add $t8, $t8, $t3      
+    	mul $t8, $t8, 4       
+	add $t7, $t8, $zero
+	
+	addi $t5, $t5, 1
+	
+	jal row_ship_placement_loop
+	
+	j end_each_player1_placement
+    isCol1:
+    	li $v0, 4
+    	la $a0, colship
+    	syscall
+    	
+    	add $t7, $t7, $zero
+    	add $t8, $t8, $zero
+    	mul $t8, $t2, 7      
+    	add $t8, $t8, $t3     
+    	mul $t8, $t8, 4       
+	add $t7, $t8, $zero
+	
+	addi $t4, $t4, 1
+	
+	jal col_ship_placement_loop
+	
+	j end_each_player1_placement
+row_ship_placement_loop:
+    lw $t9, one
+    lw $t6, player1Board($t7) 
+    beq $t9, $t6, overlap_coord
+    sw $t9, player1Board($t7)       
+
+    addi $t7, $t7, 4    
+    addi $t3, $t3, 1   
+    bne $t3, $t5, row_ship_placement_loop 
+    jr $ra
+
+col_ship_placement_loop:
+    lw $t9, one
+    lw $t6, player1Board($t7) 
+    beq $t9, $t6, overlap_coord
+    sw $t9, player1Board($t7)       
+
+    addi $t7, $t7, 28    
+    
+    addi $t2, $t2, 1    
+    bne $t2, $t4, col_ship_placement_loop  
+    jr $ra
+row_ship_placement_loop2:
+    lw $t9, one
+    lw $t6, player2Board($t7) 
+    beq $t9, $t6, overlap_coord2
+    sw $t9, player2Board($t7)       
+
+    addi $t7, $t7, 4    
+
+    addi $t3, $t3, 1   
+    bne $t3, $t5, row_ship_placement_loop2
+    jr $ra
+
+col_ship_placement_loop2:
+    lw $t9, one
+    lw $t6, player2Board($t7) 
+    beq $t9, $t6, overlap_coord2
+    sw $t9, player2Board($t7)       
+
+    addi $t7, $t7, 28    
+    
+    addi $t2, $t2, 1    
+    bne $t2, $t4, col_ship_placement_loop2  
+    jr $ra 	   	
+end_each_player1_placement:
+    jal displayBoard1
+    addi $t0, $t0, 1
+    j type_3_ship_placement1
+
+end_each_player2_placement:
+    jal displayBoard2
+    addi $t0, $t0, 1
+    j type_3_ship_placement2
+     
+end_setup_ships_loop_player1:
+    lw $ra, 0($sp)          
+    addi $sp, $sp, 4
+
+    sub $s3, $s3, $s3
+    sub $s4, $s4, $s4
+    sub $s5, $s5, $s5
+
+    j setupShipsPlayer2                 
+
+end_setup_ships_loop_player2:
+    lw $ra, 0($sp)          
+    addi $sp, $sp, 4
+
+    sub $s3, $s3, $s3
+    sub $s4, $s4, $s4
+    sub $s5, $s5, $s5
+
+    j gameLoop 
+invalid_coord2:
+    li $v0, 4
+    la $a0, invalidCoordMsg
+    syscall
+
+    j setup_ships_loop_player2
+overlap_coord2:
+    li $v0, 4
+    la $a0, overlapMsg
+    syscall
+
+    j setup_ships_loop_player2
+invalid_coord:
+    li $v0, 4
+    la $a0, invalidCoordMsg
+    syscall
+
+    j setup_ships_loop_player1
+overlap_coord:
+    li $v0, 4
+    la $a0, overlapMsg
+    syscall
+
+    j setup_ships_loop_player1
+wrongShip1:
+    li $v0, 4
+    la $a0, wrongShipMsg
+    syscall
+
+    j type_3_ship_placement1
+wrongShip2:
+    li $v0, 4
+    la $a0, wrongShipMsg
+    syscall
+
+    j type_3_ship_placement2
+displayBoard1:
+    la $t6, player1Board
+
+    li $v0, 4
+    la $a0, currentBoard
+    syscall
+
+    li $t9, 0 
+    li $t2, 0 
+
+    outer_loop_display1:
+        bge $t9, 7, end_outer_loop_display1
+
+        inner_loop_display1:
+         
+            bge $t2, 7, end_inner_loop_display1
+            
+            mul $t3, $t9, 7     
+            add $t3, $t3, $t2    
+            sll $t3, $t3, 2      
+            add $t4, $t6, $t3  
+
+            lw $t5, 0($t4)      
+            li $v0, 1            
+            move $a0, $t5
+            syscall
+
+            li $v0, 4           
+            la $a0, space
+            syscall
+
+            addi $t2, $t2, 1     
+            j inner_loop_display1
+
+        end_inner_loop_display1:
+            li $v0, 4             
+            la $a0, newline
+            syscall
+
+            addi $t9, $t9, 1     
+            li $t2, 0            
+
+            j outer_loop_display1
+
+        end_outer_loop_display1:
+            jr $ra              
+
+displayBoard2:
+    la $t6, player2Board  
+
+    li $v0, 4
+    la $a0, currentBoard
+    syscall
+
+    li $t9, 0 
+    li $t2, 0 
+
+    outer_loop_display2:
+        bge $t9, 7, end_outer_loop_display2
+
+        inner_loop_display2:
+            bge $t2, 7, end_inner_loop_display2
+            
+            mul $t3, $t9, 7     
+            add $t3, $t3, $t2    
+            sll $t3, $t3, 2      
+            add $t4, $t6, $t3  
+
+            lw $t5, 0($t4)      
+            li $v0, 1            
+            move $a0, $t5
+            syscall
+
+            li $v0, 4           
+            la $a0, space
+            syscall
+
+            addi $t2, $t2, 1     
+            j inner_loop_display2
+
+        end_inner_loop_display2:
+            li $v0, 4             
+            la $a0, newline
+            syscall
+
+            addi $t9, $t9, 1     
+            li $t2, 0            
+
+            j outer_loop_display2
+
+        end_outer_loop_display2:
+            jr $ra              
